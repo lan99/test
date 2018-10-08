@@ -1,0 +1,70 @@
+#!/bin/bash
+
+files=(~/attacker_sessions/*)
+if [ ${#files[@]} -gt 0]
+then
+
+    
+    DATE=`date '+%Y-%m-%d,%H:%M:%S'`
+    echo $DATE
+
+    #Create a folder based on date
+    FOLDER=$(~/google_drive/drive/gdrive-linux-x64 mkdir --parent 1jX8RLakl7m3p7ZOv0s-CRfgEt7n3p33F $DATE)
+    FOLDER=$(echo $FOLDER | cut -d" " -f 2)
+    echo $FOLDER
+
+
+    #create a folder for each container
+    CONT1=$(~/google_drive/drive/gdrive-linux-x64 mkdir --parent $FOLDER "Container One")
+    CONT1=$(echo $CONT1 | cut -d" " -f 2)
+    CONT2=$(~/google_drive/drive/gdrive-linux-x64 mkdir --parent $FOLDER "Container Two")
+    CONT2=$(echo $CONT2 | cut -d" " -f 2)
+    CONT3=$(~/google_drive/drive/gdrive-linux-x64 mkdir --parent $FOLDER "Container Three")
+    CONT3=$(echo $CONT3 | cut -d" " -f 2)
+    CONT4=$(~/google_drive/drive/gdrive-linux-x64 mkdir --parent $FOLDER "Container Four")
+    CONT4=$(echo $CONT4 | cut -d" " -f 2)
+
+       mv ~/attacker_sessions/* ~/already_copied/$DATE/
+
+       cd ~/already_copied/$DATE
+
+       for file in *;
+       do
+	   container=$(echo $file| cut -d"_" -f 1)
+	   
+	   attacker=$(echo $file | cut -d"_" -f 2)
+	   year=$(echo $file | cut -d"_" -f 3)
+	   month=$(echo $file | cut -d"_" -f 4)
+	   day=$(echo $file | cut -d"_" -f 5)
+	   hour=$(echo $file | cut -d"_" -f 6)
+	   minute=$(echo $file | cut -d"_" -f 7)
+	   second=$(echo $file | cut -d"_" -f 8)
+	   ms=$(echo $file | cut -d"_" -f 9) 
+
+	   name="$month/$day/$year,$hour:$minute:$second:$ms,$attacker"
+
+	   zcat $file >! formattedFile.txt
+	   
+	   if [ $container == "128.8.37.98" ]
+	   then
+	       ~/google_drive/drive/gdrive-linux-x64 upload --parent $CONT1 --name $name formattedFile.txt
+	   fi
+
+	   if [ $container == "128.8.37.120" ]
+	   then
+	       ~/google_drive/drive/gdrive-linux-x64 upload --parent $CONT2 --name $name formattedFile.txt
+	   fi
+
+	   if [ $container == "128.8.238.82" ]
+	   then
+	       ~/google_drive/drive/gdrive-linux-x64 upload --parent $CONT3 --name $name formattedFile.txt
+	   fi
+
+	   if [ $container == "128.8.37.104" ]
+	   then
+	       ~/google_drive/drive/gdrive-linux-x64 upload --parent $CONT4 --name $name formattedFile.txt
+	   fi
+       fi
+	   
+    
+done
