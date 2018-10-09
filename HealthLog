@@ -1,0 +1,48 @@
+#!/bin/bash
+    
+DATE=`date '+%Y-%m-%d,%H:%M:%S'`
+echo $DATE  
+
+mkdir ~/Health_Logs/$DATE
+touch ~/Health_Logs/$DATE/cont1.txt
+touch ~/Health_Logs/$DATE/cont2.txt
+touch ~/Health_Logs/$DATE/cont3.txt
+touch ~/Health_Logs/$DATE/cont4.txt
+
+CONT1=$(lxc-info -n 101)
+CONT2=$(lxc-info -n 102)
+CONT3=$(lxc-info -n 201)
+CONT4=$(lxc-info -n 202)
+
+echo $CONT1 | grep '^CPU' >> ~/Health_Logs/$DATE/cont1.txt
+echo $CONT2 | grep '^CPU' >> ~/Health_Logs/$DATE/cont2.txt
+echo $CONT3 | grep '^CPU' >> ~/Health_Logs/$DATE/cont3.txt
+echo $CONT4 | grep '^CPU' >> ~/Health_Logs/$DATE/cont4.txt
+
+echo $CONT1 | grep '^Memory' >> ~/Health_Logs/$DATE/cont1.txt
+echo $CONT2 | grep '^Memory' >> ~/Health_Logs/$DATE/cont2.txt
+echo $CONT3 | grep '^Memory' >> ~/Health_Logs/$DATE/cont3.txt
+echo $CONT4 | grep '^Memory' >> ~/Health_Logs/$DATE/cont4.txt
+
+disk1 = $(df-h --total | grep '^/dev/mapper/pve-vm--101' | awk {print $2})
+disk2 = $(df-h --total | grep '^/dev/mapper/pve-vm--101' | awk {print $2})
+disk3 = $(df-h --total | grep '^/dev/mapper/pve-vm--101' | awk {print $2})
+disk4 = $(df-h --total | grep '^/dev/mapper/pve-vm--101' | awk {print $2})
+
+echo $disk1 >> ~/Health_Logs/$DATE/cont1.txt
+echo $disk2 >> ~/Health_Logs/$DATE/cont2.txt
+echo $disk3 >> ~/Health_Logs/$DATE/cont3.txt
+echo $disk4 >> ~/Health_Logs/$DATE/cont4.txt
+
+#calc number of ssh connections here!!!!!!!!!!!
+
+FOLDER=$(~/google_drive/drive/gdrive-linux-x64 mkdir --parent 16Ph-m7-hu9_3SUbiz8U79wSEjlGneqm- $DATE)
+FOLDER=$(echo $FOLDER | cut -d" " -f 2)
+
+cd ~/Health_Logs/$DATE/
+
+~/google_drive/drive/gdrive-linux-x64 upload --parent $FOLDER cont1.txt
+~/google_drive/drive/gdrive-linux-x64 upload --parent $FOLDER cont2.txt
+~/google_drive/drive/gdrive-linux-x64 upload --parent $FOLDER cont3.txt
+~/google_drive/drive/gdrive-linux-x64 upload --parent $FOLDER cont4.txt
+
